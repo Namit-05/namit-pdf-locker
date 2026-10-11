@@ -31,8 +31,20 @@ label.head{font-weight:bold;display:block;margin-top:14px}button{width:100%;padd
 {% if error %}<p class="error">{{error}}</p>{% endif %}
 {% if step == 1 %}
 <form method="post" action="/quiz">
-{% for q in questions %}<fieldset><legend>Q{{loop.index}}. {{q[0]}}</legend>{% for op in q[1] %}<label class="opt"><input type="radio" name="q{{loop.index0+1}}" value="{{loop.index0}}" required> {{["a","b","c","d"][loop.index0]}}) {{op}}</label>{% endfor %}</fieldset>{% endfor %}
-<button>Check Answers</button></form>
+
+{% for q in questions %}
+{% set qnum = loop.index %}
+<fieldset>
+  <legend>Q{{ qnum }}. {{ q[0] }}</legend>
+  {% for op in q[1] %}
+  <label class="opt">
+    <input type="radio" name="q{{ qnum }}" value="{{ loop.index0 }}" required>
+    {{ ["a","b","c","d"][loop.index0] }}) {{ op }}
+  </label>
+  {% endfor %}
+</fieldset>
+{% endfor %}
+
 {% elif step == 2 %}
 <p>All six answers are correct. Enter the binary unlock code.</p><form method="post" action="/code"><label class="head">Binary unlock code</label><input type="text" name="code" pattern="[01]+" inputmode="numeric" required placeholder="Enter binary code"><button>Unlock PDF Locker</button></form>
 {% else %}
