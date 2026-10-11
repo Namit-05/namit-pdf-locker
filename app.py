@@ -44,7 +44,8 @@ label.head{font-weight:bold;display:block;margin-top:14px}button{width:100%;padd
   {% endfor %}
 </fieldset>
 {% endfor %}
-
+<button type="submit">Check Answers</button>
+</form>
 {% elif step == 2 %}
 <p>All six answers are correct. Enter the binary unlock code.</p><form method="post" action="/code"><label class="head">Binary unlock code</label><input type="text" name="code" pattern="[01]+" inputmode="numeric" required placeholder="Enter binary code"><button>Unlock PDF Locker</button></form>
 {% else %}
