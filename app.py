@@ -49,11 +49,11 @@ label.head{font-weight:bold;display:block;margin-top:14px}button{width:100%;padd
 {% elif step == 2 %}
 <p>All six answers are correct. Enter the binary unlock code.</p><form method="post" action="/code"><label class="head">Binary unlock code</label><input type="text" name="code" pattern="[01]+" inputmode="numeric" required placeholder="Enter binary code"><button>Unlock PDF Locker</button></form>
 {% else %}
-<p>Upload a PDF or paste a direct public PDF link. Choose a password to protect the downloaded copy.</p>
+<p>Upload a PDF or paste a direct public PDF link. Your binary unlock code will protect the downloaded copy.</p>
 <form method="post" action="/lock" enctype="multipart/form-data">
 <label class="head">PDF from your device (optional)</label><input type="file" name="pdf" accept=".pdf,application/pdf">
 <label class="head">Or direct PDF link</label><input type="url" name="pdf_url" placeholder="https://example.com/document.pdf">
-<label class="head">Password for the locked PDF</label><input type="password" name="password" required autocomplete="new-password">
+
 <button>Lock PDF & Download</button></form>
 <p class="note">The answer key and unlock code are not displayed. PDFs are processed temporarily by the server. Do not use a third-party hosted version for confidential files unless you trust the host.</p>
 {% endif %}<p class="note">Maximum PDF size: 25 MB. Links must point directly to a publicly accessible PDF file.</p></main></body></html>"""
@@ -89,11 +89,10 @@ def code():
 def lock():
     if not session.get("quiz_ok") or not session.get("code_ok"):
         return redirect(url_for("home"))
-    password = request.form.get("password", "")
+    password = UNLOCK_CODE
     upload = request.files.get("pdf")
     link = request.form.get("pdf_url", "").strip()
-    if not password:
-        return render(3, "Enter a password."), 400
+    
     try:
         if upload and upload.filename:
             raw = upload.read(MAX_BYTES + 1)
